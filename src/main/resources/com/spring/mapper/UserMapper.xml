@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.mapper.UserMapper">
+	<resultMap type="User" id="userResultMap">
+		<result property="id" column="id" />
+		<result property="username" column="username" />
+		<result property="birthday" column="birthday" />
+		<result property="sex" column="sex" />
+		<result property="address" column="address" />
+		<result property="cash" column="cash" />
+	</resultMap>
+	
+	<sql id="table_columns">
+		id,
+		username,
+		birthday,
+		sex,
+		address,
+		cash
+    </sql>
+	<sql id="entity_properties">
+		#{id},
+		#{username},
+		#{birthday},
+		#{sex},
+		#{address},
+		#{cash}
+	</sql>
+	
+	<!-- 适用于主键自增类型 -->
+	<insert id="save" parameterType="User" useGeneratedKeys="true" keyProperty="id">
+		insert into user( <include refid="table_columns" /> ) 
+		values ( <include refid="entity_properties" /> )
+	</insert>
+
+    <delete id="deleteById" parameterType="int">
+        delete from user
+        where id = #{id}
+    </delete>
+
+	<delete id="deleteByIds">
+		delete from user
+		where id in
+		<foreach item="item" collection="array" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<update id="update" parameterType="User">
+		update user 
+		<trim prefix="set" suffixOverrides=",">
+			<if test="username != null and username != ''">username = #{username},</if>
+			<if test="birthday != null and birthday != ''">birthday = #{birthday},</if>
+			<if test="sex != null and sex != ''">sex = #{sex},</if>
+			<if test="address != null and address != ''">address = #{address},</if>
+			<if test="cash != null and cash != ''">cash = #{cash},</if>
+		</trim>
+		<where>id = #{id}</where>
+	</update>
+	
+	<select id="findById" resultMap="userResultMap" parameterType="int" >
+		select <include refid="table_columns" />
+		from user
+		where id = #{id}
+	</select>
+	
+	<select id="queryAll" resultMap="userResultMap">
+		select <include refid="table_columns" /> 
+		from user
+	</select>
+	
+	<!-- 使用like用法：columnName like concat('%',#columnName#,'%') -->
+	<sql id="page_where">
+		<trim prefix="where" prefixOverrides="and | or ">
+			<if test="username != null and username != ''">and username = #{username}</if>
+			<if test="birthday != null and birthday != ''">and birthday = #{birthday}</if>
+			<if test="sex != null and sex != ''">and sex = #{sex}</if>
+			<if test="address != null and address != ''">and address = #{address}</if>
+			<if test="cash != null and cash != ''">and cash = #{cash}</if>
+		</trim>
+	</sql>
+	
+	<select id="page" resultMap="userResultMap" parameterType="User">
+		select <include refid="table_columns" />
+		from user
+		<include refid="page_where" />
+		limit #{firstIndex},#{pageSize}
+	</select>
+	
+	<select id="pageCount" resultType="int" parameterType="User">
+		select count(id) from user
+		<include refid="page_where" />
+	</select>
+	
+	<!-- 其他自定义SQL -->
+	
+</mapper>

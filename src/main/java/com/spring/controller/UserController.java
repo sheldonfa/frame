@@ -1,7 +1,7 @@
-package com.demo.controller;
+package com.spring.controller;
 
-import com.demo.pojo.User;
-import com.demo.service.UserService;
+import com.pojo.User;
+import com.spring.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,11 +22,6 @@ public class UserController{
 
     @RequestMapping("/queryUser/{id}")
     public String queryUser(@PathVariable Integer id, Model model) throws IOException {
-
-        User user = userService.findUserById(id);
-
-        System.out.println(user);
-        model.addAttribute(user);
 
         return "/user_page";
 

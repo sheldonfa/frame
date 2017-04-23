@@ -1,15 +1,10 @@
-package com.demo.test;
+package com.spring.service;
 
 
-import com.demo.mapper.UserMapper;
-import com.demo.pojo.User;
-import com.demo.service.UserService;
-import org.junit.Before;
+import com.pojo.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -19,14 +14,16 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"classpath:spring/applicationContext-*.xml"})
-public class MapperTest {
+public class UserServiceTest {
 
     @Autowired
     private UserService userService;
 
     @Test
-    public void testFindUserByUserVo() throws Exception {
-        User user = userService.findUserById(1);
-        System.out.println(user);
+    public void testAdd() throws Exception {
+        User user = new User();
+        user.setUsername("adsfasd");
+        userService.add(user);
     }
+
 }
